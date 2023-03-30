@@ -1,7 +1,11 @@
 const express = require("express");
 
-const {users} = require("./data/users.json");
-const {books} = require("./Data/books.json");
+// No need of this now cuz we have separate files for both
+// const {users} = require("./data/users.json");
+// const {books} = require("./Data/books.json");
+
+const userRouter = require('./Routes/users');
+const booksRouter = require('./Routes/books');
 
 const app = express();
 
@@ -11,137 +15,16 @@ app.use(express.json());
 
 // Defining one basic "/" root
 // (req,res) are the parameters to the callback function
+// Root url = http://localhost:8081/users/
 app.get("/", (req, res) => {
     res.status(200).json ({
         message: "Server is up and running :)"
     })
 })
 
-/*
-    Route: /users
-    Method: GET
-    Description: Get all users
-    Access: Public
-    Parameters: None
-*/
-app.get("/users", (req,res) => {
-    res.status(200).json({
-        success: true,
-        data: users
-    })
-})
-
-/*
-    Route: /users/:id
-    Method: GET
-    Description: Get a single user from the particular id
-    Access: Public
-    Parameters: id
-*/
-app.get("/users/:id", (req,res) => {
-    const {id} = req.params;
-    const user = users.find((each)=>each.id === id);
-    if (!user) {
-        return res.status(404).json({
-            success: false,
-            message: "User does not exist :("
-        })
-    }
-    // One method can have only one return statement
-    return res.status(200).json ({
-        success: true,
-        message: "User found!",
-        data: user
-    })
-})
-
-/*
-    Route: /users
-    Method: POST
-    Description: Creating a new user
-    Access: Public
-    Parameters: None
-*/
-app.post("/users", (req,res) => {
-    const {id, name, surname, email, subscriptionType, subscriptionDate} = req.body;
-
-    const user = users.find((each)=>each.id === id);
-
-    if (user) {
-        return res.status(404).json({
-            success: false,
-            message: "User with this id already exists!"
-        })
-    }
-    // Not including the issued and return fields because we are creating a new user here from scratch
-    // To add those fields we'll use books.json file, primary key-foreign key concept of dbms
-    users.push ({
-        id,
-        name,
-        surname,
-        email,
-        subscriptionType,
-        subscriptionDate
-    })
-    return res.status(201).json ({
-        success: true,
-        message: "User added successfully!!",
-        data: users
-    })
-})
-
-/*
-    Route: /users/:id
-    Method: PUT
-    Description: Updating a user by their id
-    Access: Public
-    Parameters: id
-*/
-app.put("/users/:id", (req,res) => {
-    const {id} = req.params;
-    const {data} = req.body;
-
-    const user = users.find((each)=>each.id === id);
-    if (!user) {
-        return res.status(404).json ({
-            success: false,
-            message: "User does not exist :("
-        })
-    }
-    const updateUserData = users.map((each)=> {
-        if (each.id === id) {
-            return{
-                ...each,
-                ...data // Getting this keyword from our body, if key matches we update otherwise return the same info from 'each'
-            }
-        }
-        return each;
-    })
-    return res.status(200).json ({
-        success: true,
-        message: "User Updated!",
-        data: updateUserData
-    })
-})
-
-/*
-    Route: /users/:id
-    Method: DELETE
-    Description: Deleting a user by their id
-    Access: Public
-    Parameters: id
-*/
-app.delete("/users/:id", (req,res) => {
-    const {id} = req.params;
-
-    const user = users.find((each)=>each.id === id);
-    if (!user) {
-        return res.status(404).json ({
-            success: false,
-            message: "User does not exist :("
-        })
-    }
-})
+// Redirecting the workflow to js files in 'Routes' folder when url has any of '/users' or '/books'
+app.use("/users", userRouter);
+app.use("/books", booksRouter);
 
 app.get("*", (req,res) => {
     res.status(404).json({
