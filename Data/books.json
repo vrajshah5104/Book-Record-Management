@@ -1,0 +1,28 @@
+{
+    "books": [
+        {
+            "id": "1",
+            "name": "Death on the Nile",
+            "author": "Agatha Christie",
+            "genre": "Crime Fiction",
+            "price": "12.69",
+            "publisher": "Collins Crime Club"
+        },
+        {
+            "id": "2",
+            "name": "Murder on the Orient Express",
+            "author": "Agatha Christie",
+            "genre": "Mystery",
+            "price": "14.69",
+            "publisher": "Collins Crime Club"
+        },
+        {
+            "id": "3",
+            "name": "Sleeping Murder",
+            "author": "Agatha Christie",
+            "genre": "Detective Fiction",
+            "price": "16.69",
+            "publisher": "Collins Crime Club"
+        }
+    ]
+}
