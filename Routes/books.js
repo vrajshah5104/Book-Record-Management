@@ -33,6 +33,7 @@ router.get("/", (req,res) => {
     Access: Public
     Parameters: None
 */
+// This code can either be above /books/:id wado code or below with very specific url for eg. /issued/by-user
 router.get("/issued", (req,res) => {
     // Khali ek value return joiti hoy toh '.find' use karat, but here we want an array back soo '.filter'
     const userWithIssuedBooks = users.filter((each) => {
@@ -63,7 +64,82 @@ router.get("/issued", (req,res) => {
 })
 
 /*
-    Route: /books/:id
+    Route: /books
+    Method: POST
+    Description: Adding a new book
+    Access: Public
+    Parameters: None
+    Data: id, name, author, genre, price, publisher
+*/
+router.post ("/", (req,res) => {
+    const {data} = req.body;
+
+    if (!data) {
+        return res.status(200).json ({
+            success: false,
+            message: "No Data provided to add a Book"
+        })
+    }
+
+    const book = books.find((each)=>each.id === data.id);
+    if (book) {
+        return res.status(404).json ({
+            success: false,
+            message: "Book with this Id already exists"
+        })
+    }
+
+    const allBooks = {...books, data}; // '...' this is called a spread syntax/operator
+    return res.status(201).json ({
+        success: true,
+        message: "Added the Book Successfully",
+        data: allBooks
+    })
+})
+
+/*
+    Route: /books/updateBook/:id
+    // Lambo root rakhiyo cuz bije pan khali /:id che soo we want unique here
+    Method: PUT
+    Description: Updating a book by its id
+    Access: Public
+    Parameters: id
+    Data: id, name, author, genre, price, publisher
+*/
+router.put("/updateBook/:id", (req,res) => {
+    const {id} = req.params;
+    const {data} = req.body;
+
+    const book = books.find((each)=>each.id === id);
+    if (!book) {
+        return res.status(400).json ({
+            success: false,
+            message: "Book not found for this id :("
+        })
+    }
+
+    const updateData = books.map((each) => {
+        if (each.id === id) {
+            return {
+                ...each,
+                ...data
+            }
+        }
+        return each;
+    })
+
+    return res.status(200).json ({
+        success: true,
+        message: "Updated the book by its id",
+        data: updateData
+    })
+})
+
+/*
+    Route: /books/:id or /books?id=1
+    // '?' thi parameter lakhay jemki ?id=1
+    // Parameter add karvu hoy toh use '&' jemki ?id=1&name=Vraj
+    // Aa badhu na karvu hoy toh GET na parameters ma pan lakhi shako
     Method: GET
     Description: Get books by their id
     Access: Public

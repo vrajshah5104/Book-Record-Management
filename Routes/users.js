@@ -141,5 +141,73 @@ router.delete("/:id", (req,res) => {
     })
 })
 
+/*
+    Route: /subscription-details/:id
+    Method: GET
+    Description: Getting user subscription details
+    Access: Public
+    Parameters: id
+*/
+router.get("/subscription-details/:id", (req,res) => {
+    const {id} = req.params;
+
+    const user = users.find((each)=>each.id === id);
+    if(!user) {
+        return res.status(404).json ({
+            success: false,
+            message: "User with this id does not exist :("
+        })
+    }
+
+    const getDateInDays = (data = "") => {
+        let date;
+        // Google by default calculates the days from Jan 1 1970 UTC in milliseconds
+
+        if (data === "") {
+            date = new Date(); // JS method to assign todays date if we don't have any data
+        }
+        else {
+            date = new Date(data); // If we find some data, this method will calculate todays date based on it
+        }
+        // 6.9 floor value is 6, 6.01 ceiling value is 7
+        // We want round off number here soo can use either floor or ceil maths functions
+        // Calculating it in 24hrs, 60mins, 60secs, 1000milisecs
+        // This calculates the number of days from date given in data till today
+        let days = Math.floor(date / (1000*60*60*24));
+        return days;
+    };
+
+    const subscriptionType = (date) => {
+        if (user.subscriptionType  === "Basic") {
+            date = date + 90;
+        }
+        else if (user.subscriptionType  === "Standard") {
+            date = date + 180;
+        }
+        else if (user.subscriptionType  === "Premium") {
+            date = date + 365;
+        }
+        return date;
+    };
+
+    let returnDate = getDateInDays(user.returnDate);
+    let currentDate = getDateInDays();
+    let subscriptionDate = getDateInDays(user.subscriptionDate);
+    let subscriptionExpiration = subscriptionType(subscriptionDate);
+
+    const data = {
+        ...user,
+        hasSubscriptionExpired : subscriptionExpiration < currentDate,
+        daysLeftForExpiration : subscriptionExpiration <= currentDate ? 0 : subscriptionExpiration - currentDate,
+        // Using nested if else logic
+        fine : returnDate < currentDate ? subscriptionExpiration <= currentDate ? 100 : 50 : 0
+    }
+    return res.status(200).json ({
+        success: true,
+        message: "Subscription detail for the user is : ",
+        data
+    })
+})
+
 // Exporting/Returning it back
 module.exports = router;
