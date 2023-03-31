@@ -1,5 +1,14 @@
 const express = require("express");
 
+// Importing the .env file here
+const dotenv = require("dotenv");
+
+// Activating and Configuring the .env file here
+dotenv.config();
+
+// Importing the databaseConnection file here
+const DbConnection = require("./databaseConnection");
+
 // No need of this now cuz we have separate files for both
 // const {users} = require("./data/users.json");
 // const {books} = require("./Data/books.json");
@@ -8,6 +17,8 @@ const userRouter = require('./Routes/users');
 const booksRouter = require('./Routes/books');
 
 const app = express();
+
+DbConnection();
 
 const PORT = 8081;
 

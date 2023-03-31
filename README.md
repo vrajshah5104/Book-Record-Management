@@ -1,4 +1,5 @@
 # Book-Record-Mnanagement
+# Mongo-Db
 
 Server >> Storing certain book data
        >> User register
@@ -78,4 +79,6 @@ Start/Run a server
 Create file .gitignore
 Files/Folders in it will not be seen on github
 
-Continue Day-43 from 1:45:46
+MongoDb connection files, codes, notes also present in this Project
+
+Continue Day-44 from 09:23
