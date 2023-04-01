@@ -7,6 +7,9 @@ const {users} = require("../Data/users.json");
 // Initializing it here
 const router = express.Router();
 
+// Exporting both the models here
+const {UserModel, BookModel} = require("../Models/localindex");
+
 /*
     Route: /
     Method: GET

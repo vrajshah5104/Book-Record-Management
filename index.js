@@ -18,6 +18,7 @@ const booksRouter = require('./Routes/books');
 
 const app = express();
 
+// Calling the function that is created in databaseConnection.js
 DbConnection();
 
 const PORT = 8081;

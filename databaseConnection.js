@@ -16,9 +16,9 @@ function DbConnection() {
 
 const db = mongoose.connection;
 
-// If you have error
-db.on("error", console.error.bind(console, "Connection Error"))
-// If you do not have any error
+// Checking if we have error
+db.on("error", console.error.bind(console, "Connection Error")) // 'console.log' is also an acceptable alternative
+// Checking if we do not have any error
 db.once("open", function() {
     console.log("Database Connected!");
 })

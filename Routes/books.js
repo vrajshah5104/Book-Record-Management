@@ -1,6 +1,9 @@
 // Importing Express
 const express = require("express");
 
+// Importing the book-controller.js file here
+const {getAllBooks} = require("../Controllers/book-controller");
+
 // Importing books.json file
 const {books} = require("../Data/books.json");
 
@@ -11,6 +14,9 @@ const {users} = require("../Data/users.json");
 // Initializing it here
 const router = express.Router();
 
+// Exporting both the models here
+const {UserModel, BookModel} = require("../Models/localindex");
+
 /*
     Route: /books
     Method: GET
@@ -18,13 +24,16 @@ const router = express.Router();
     Access: Public
     Parameters: None
 */
-router.get("/", (req,res) => {
-    res.status(200).json ({
-        success: true,
-        message: "Got all the Books :)",
-        data: books
-    })
-})
+// router.get("/", (req,res) => {
+//     res.status(200).json ({
+//         success: true,
+//         message: "Got all the Books :)",
+//         data: books
+//     })
+// })
+// Another way of doing the same thing
+// The success, message, data functions are present in the book-controller.js file
+router.get("/", getAllBooks);
 
 /*
     Route: /books/issued
