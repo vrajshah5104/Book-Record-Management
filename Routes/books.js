@@ -2,7 +2,13 @@
 const express = require("express");
 
 // Importing the book-controller.js file here
-const {getAllBooks} = require("../Controllers/book-controller");
+const {
+    getAllBooks,
+    getAllIssuedBooks,
+    addNewBook,
+    updateBookById,
+    getSingleBookById
+} = require("../Controllers/book-controller");
 
 // Importing books.json file
 const {books} = require("../Data/books.json");
@@ -43,34 +49,36 @@ router.get("/", getAllBooks);
     Parameters: None
 */
 // This code can either be above /books/:id wado code or below with very specific url for eg. /issued/by-user
-router.get("/issued", (req,res) => {
-    // Khali ek value return joiti hoy toh '.find' use karat, but here we want an array back soo '.filter'
-    const userWithIssuedBooks = users.filter((each) => {
-        if (each.issuedBooks) {
-            return each;
-        }
-    })
-    const issuedBooks = [];
-    userWithIssuedBooks.forEach((each) => {
-        const book = books.find((book) => book.id = each.issuedBooks);
-        book.issuedBy = each.name;
-        book.issuedDate = each.issuedDate;
-        book.returnDate = each.returnDate;
+// router.get("/issued", (req,res) => {
+//     // Khali ek value return joiti hoy toh '.find' use karat, but here we want an array back soo '.filter'
+//     const userWithIssuedBooks = users.filter((each) => {
+//         if (each.issuedBooks) {
+//             return each;
+//         }
+//     })
+//     const issuedBooks = [];
+//     userWithIssuedBooks.forEach((each) => {
+//         const book = books.find((book) => book.id = each.issuedBooks);
+//         book.issuedBy = each.name;
+//         book.issuedDate = each.issuedDate;
+//         book.returnDate = each.returnDate;
 
-        issuedBooks.push(book);
-    })
-    if (issuedBooks.length === 0) {
-        res.status(404).json ({
-            success: false,
-            message: "No Books have been Issued yet"
-        })
-    }
-    res.status(200).json ({
-        success: true,
-        message: "Users with Issued Books",
-        data: issuedBooks
-    })
-})
+//         issuedBooks.push(book);
+//     })
+//     if (issuedBooks.length === 0) {
+//         res.status(404).json ({
+//             success: false,
+//             message: "No Books have been Issued yet"
+//         })
+//     }
+//     res.status(200).json ({
+//         success: true,
+//         message: "Users with Issued Books",
+//         data: issuedBooks
+//     })
+// })
+// Another way of doing the same thing
+router.get("/", getAllIssuedBooks);
 
 /*
     Route: /books
@@ -80,31 +88,33 @@ router.get("/issued", (req,res) => {
     Parameters: None
     Data: id, name, author, genre, price, publisher
 */
-router.post ("/", (req,res) => {
-    const {data} = req.body;
+// router.post ("/", (req,res) => {
+//     const {data} = req.body;
 
-    if (!data) {
-        return res.status(200).json ({
-            success: false,
-            message: "No Data provided to add a Book"
-        })
-    }
+//     if (!data) {
+//         return res.status(200).json ({
+//             success: false,
+//             message: "No Data provided to add a Book"
+//         })
+//     }
 
-    const book = books.find((each)=>each.id === data.id);
-    if (book) {
-        return res.status(404).json ({
-            success: false,
-            message: "Book with this Id already exists"
-        })
-    }
+//     const book = books.find((each)=>each.id === data.id);
+//     if (book) {
+//         return res.status(404).json ({
+//             success: false,
+//             message: "Book with this Id already exists"
+//         })
+//     }
 
-    const allBooks = {...books, data}; // '...' this is called a spread syntax/operator
-    return res.status(201).json ({
-        success: true,
-        message: "Added the Book Successfully",
-        data: allBooks
-    })
-})
+//     const allBooks = {...books, data}; // '...' this is called a spread syntax/operator
+//     return res.status(201).json ({
+//         success: true,
+//         message: "Added the Book Successfully",
+//         data: allBooks
+//     })
+// })
+// Another way of doing the same thing
+router.get("/", addNewBook);
 
 /*
     Route: /books/updateBook/:id
@@ -115,34 +125,36 @@ router.post ("/", (req,res) => {
     Parameters: id
     Data: id, name, author, genre, price, publisher
 */
-router.put("/updateBook/:id", (req,res) => {
-    const {id} = req.params;
-    const {data} = req.body;
+// router.put("/updateBook/:id", (req,res) => {
+//     const {id} = req.params;
+//     const {data} = req.body;
 
-    const book = books.find((each)=>each.id === id);
-    if (!book) {
-        return res.status(400).json ({
-            success: false,
-            message: "Book not found for this id :("
-        })
-    }
+//     const book = books.find((each)=>each.id === id);
+//     if (!book) {
+//         return res.status(400).json ({
+//             success: false,
+//             message: "Book not found for this id :("
+//         })
+//     }
 
-    const updateData = books.map((each) => {
-        if (each.id === id) {
-            return {
-                ...each,
-                ...data
-            }
-        }
-        return each;
-    })
+//     const updateData = books.map((each) => {
+//         if (each.id === id) {
+//             return {
+//                 ...each,
+//                 ...data
+//             }
+//         }
+//         return each;
+//     })
 
-    return res.status(200).json ({
-        success: true,
-        message: "Updated the book by its id",
-        data: updateData
-    })
-})
+//     return res.status(200).json ({
+//         success: true,
+//         message: "Updated the book by its id",
+//         data: updateData
+//     })
+// })
+// Another way of doing the same thing
+router.get("/", updateBookById);
 
 /*
     Route: /books/:id or /books?id=1
@@ -154,22 +166,24 @@ router.put("/updateBook/:id", (req,res) => {
     Access: Public
     Parameters: id
 */
-router.get("/:id", (req,res) => {
-    const {id} = req.params;
-    const book = books.find((each)=>each.id === id);
+// router.get("/:id", (req,res) => {
+//     const {id} = req.params;
+//     const book = books.find((each)=>each.id === id);
 
-    if (!book) {
-        return res.status(404).json ({
-            success: false,
-            messsage: "Book not found :("
-        })
-    }
-    return res.status(200).json ({
-        success: true,
-        message: "Found the Book by its id",
-        data: book
-    })
-})
+//     if (!book) {
+//         return res.status(404).json ({
+//             success: false,
+//             messsage: "Book not found :("
+//         })
+//     }
+//     return res.status(200).json ({
+//         success: true,
+//         message: "Found the Book by its id",
+//         data: book
+//     })
+// })
+// Another way of doing the same thing
+router.get("/", getSingleBookById)
 
 // Exporting/Returning it back
 module.exports = router;
