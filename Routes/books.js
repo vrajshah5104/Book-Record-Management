@@ -78,7 +78,7 @@ router.get("/", getAllBooks);
 //     })
 // })
 // Another way of doing the same thing
-router.get("/", getAllIssuedBooks);
+router.get("/issued/by-user", getAllIssuedBooks);
 
 /*
     Route: /books
@@ -114,7 +114,7 @@ router.get("/", getAllIssuedBooks);
 //     })
 // })
 // Another way of doing the same thing
-router.get("/", addNewBook);
+router.post("/", addNewBook);
 
 /*
     Route: /books/updateBook/:id
@@ -154,7 +154,7 @@ router.get("/", addNewBook);
 //     })
 // })
 // Another way of doing the same thing
-router.get("/", updateBookById);
+router.put("/updateBook/:id", updateBookById);
 
 /*
     Route: /books/:id or /books?id=1
@@ -183,7 +183,7 @@ router.get("/", updateBookById);
 //     })
 // })
 // Another way of doing the same thing
-router.get("/", getSingleBookById)
+router.get("/:id", getSingleBookById);
 
 // Exporting/Returning it back
 module.exports = router;

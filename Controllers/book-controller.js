@@ -10,9 +10,9 @@ const issuedBooks = require("../DTOs/book-dto");
 // Description: Getting all the books
 // Fetching something from the database takes time, soo we need to make it in a synchronous way
 // So we use Async and Await here
-const getAllBooks = async(req, res) => {
+exports.getAllBooks = async(req, res) => {
     const books = await BookModel.find();
-
+    console.log(books);
     if (books.length === 0) {
         return res.status(404).json ({
             success: false,
@@ -28,7 +28,7 @@ const getAllBooks = async(req, res) => {
 
 // Completing this method inorder to call the books.js wala API
 // Description: Get all the Issued Books (Only if the user has issued any)
-const getAllIssuedBooks = async(req, res) => {
+exports.getAllIssuedBooks = async(req, res) => {
     const users = await UserModel.find ({
         issuedBooks : {$exists: true}
     }).populate("issuedBooks")
@@ -53,7 +53,7 @@ const getAllIssuedBooks = async(req, res) => {
 
 // Completing this method inorder to call the books.js wala API
 // Description: Adding a new book
-const addNewBook = async(req, res) => {
+exports.addNewBook = async(req, res) => {
     const {data} = req.body;
   
     if (!data) {
@@ -74,7 +74,7 @@ const addNewBook = async(req, res) => {
 
 // Completing this method inorder to call the books.js wala API
 // Description: Updating a book by its id
-const updateBookById = async(req, res) => {
+exports.updateBookById = async(req, res) => {
     const {id} = req.params;
     const {data} = req.body;
     const updatedBook = await BookModel.findOneAndUpdate (
@@ -95,7 +95,7 @@ const updateBookById = async(req, res) => {
 
 // Completing this method inorder to call the books.js wala API
 // Description: Get books by their id
-const getSingleBookById = async(req, res) => {
+exports.getSingleBookById = async(req, res) => {
     const {id} = req.params;
     const book = await BookModel.findById(id);
   
@@ -112,4 +112,4 @@ const getSingleBookById = async(req, res) => {
     });
 };
 
-module.exports = {getAllBooks, getAllIssuedBooks, addNewBook, updateBookById, getSingleBookById};
+// module.exports = {getAllBooks, getAllIssuedBooks, addNewBook, updateBookById, getSingleBookById};

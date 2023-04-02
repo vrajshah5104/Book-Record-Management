@@ -21,7 +21,7 @@ db.on("error", console.error.bind(console, "Connection Error")) // 'console.log'
 // Checking if we do not have any error
 db.once("open", function() {
     console.log("Database Connected!");
-})
+});
 
 // Exporting the function that we created above
 module.exports = DbConnection;

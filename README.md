@@ -80,5 +80,3 @@ Create file .gitignore
 Files/Folders in it will not be seen on github
 
 MongoDb connection files, codes, notes also present in this Project
-
-Continue Day-45 3.2 from 01:09:18
